@@ -107,7 +107,7 @@ needed, *replication* feature of **MongoDB** should be considered. This is beyon
 scope of this documentation, please refer to [MongoDB Documentation](https://docs.mongodb.com/manual/replication/).
 
 Pype can run it's own instance of **mongodb**, mostly for testing and development purposes.
-For that it uses locally installed **MongoDB**.
+For that is uses locally installed **MongoDB**.
 
 Download it from [mognoDB website](https://www.mongodb.com/download-center/community), install it and
 add to the `PATH`. On Windows, Pype tries to find it in standard installation destination or using `PATH`.
@@ -136,11 +136,6 @@ $PSVersionTable
  If you need to install PowerShell or update it, please refer to:
  [Installing powershell on windows](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-6)
 
-### Xcode CLT (on Mac only)
-
-Pype need **Xcode Command Line Tools** installed to provide its tools and be able to install its dependencies via pythons `pip` command. Those will be downloaded
-and installed automatically if needed.
-
 ### Other
 :::warning Linux headless server
 If you need to run Pype's **ftrack event server** on headless linux server, be aware that due Qt dependencies, you'll need to install OpenGL support there even if server doesn't have any real use for it.
@@ -166,12 +161,12 @@ Shared Network Drive
 To prepare this structure, you can use:
 ```sh
 cd /shared_drive/pype
-git clone --tag 2.4.0 https://bitbucket.com/pypeclub/pype-setup.git prod
-git clone --tag 2.4.0 https://bitbucket.com/pypeclub/pype-setup.git dev
+git clone --branch 2.4.0 https://github.com/pypeclub/pype-setup.git prod
+git clone --branch 2.4.0 https://github.com/pypeclub/pype-setup.git dev
 ```
 :::
 
-Specify your version after `--branch` or `--tag` option.
+Specify your version after `--branch` option.
 
 :::note
 It is possible to distinguish `dev` and `prod` by changing Pype icon color to orange. To do so, you have to create `config.ini` file with content:
@@ -200,89 +195,31 @@ By default, both branches will use the same virtual environment. Be careful when
 
 ### Installation
 
-:::neutral Platform specific Specifics
-<!--DOCUSAURUS_CODE_TABS-->
-<!--Windows-->
-<br>
-To install Pype you need to get first to it's root directory in powershell.
+To install pype you first need get to it's root directory in shell or powershell.
 
-If you have Pype on network, you should mount it as drive and assign it some consistent letter. You can also mount this network drive via junction point feature. As admin run from shell:
-
-```sh
-mklink /d "C:\pipeline" "\\server\pipeline"
-```
-Then your network drive will be available transparently at `C:\pipeline`.
-
-```sh
-cd Z:\pype\production\pype-setup
-```
------
-
-Now you can run installation itself:
-```sh
-.\pype.bat install
-```
-
-
-<!--Linux-->
-<br>
-To install pype you first need get to it's root directory in bash shell.
-If you Pype location is on network drive, you should add it to `/etc/fstab` to
-mount it automatically during system startup.
 ```sh
 cd /location/of/pype
 ```
 
-**Pype** can be installed with the following command:
+Pype commands are the same on both Windows and Linux, only Pype invocation  differs slightly. On Windows, Pype is run using `.\pype.bat` and on Linux using `. pype`. From now on
+just substitute `pype` for whatever is relevant for your platform.
+
+Once you have p`pype-setup` cloned, **Pype** can be installed with the following command:
 
 ```sh
-. pype install
+pype install
 ```
-
-On linux it is necessary to adjust user permissions to `/opt/pype/pype_env2` or whatever you set in `PYPE_ENV` and for that you need to be **root**.
-
-<!--Mac-->
-
-#### Mounting network drives
-If you Pype location is on network drive, you need to mount it first. Here are the steps to do it and make it so it re-mounts automatically after your computer restarts:
-
-1) in Finder press **Command+K**
-2) enter path `smb://server/pipeline` and hit **Connect**
-3) enter login and password
-4) network drive is now mounted under `/Volumes/pipeline`
-5) now go to **System Preferences**
-6) click **Users & Groups -> Login Items**
-7) click + and select mounted drive and click **Add**
-:::
-
-To install Pype on Mac, you need to have Administrator privileges. There are also further requirements if you need to deploy repositories.
-
-Run **Terminal**. Run following commands:
-```sh
-sudo -s
-cd /Volumes/pipeline/pype/production/pype-setup
-./pype install
-```
-
-`sudo -s` will take you to elevated privileges and you need to enter your password. `cd` will change directory to where you have pype located and `pype install` will run installation.
-
-If there are then warnings about some directory not owned by current user, you can fix it with following commands:
-
-```sh
-chown -R yourusername /usr/local/pype
-chown -R yourusername /Users/yourusername/Library/Caches/pip
-```
-Switch `yourusername` for your user name :)
-
-<!--END_DOCUSAURUS_CODE_TABS-->
-:::
 
 What it basically does is:
-1) Create python virtual environment on path: `C:\Users\Public\pype_env2` on Windows or `/opt/pype/pype_env2` on Linux or `/usr/local/pype/pype_env2` on Mac.
+1) Create python virtual environment on path: `C:\Users\Public\pype_env2` on Windows or `/opt/pype/pype_env2` on Linux.
 This can be overridden by setting `PYPE_ENV` to different path. Logic behind this is that this directory on Windows can be shared
 between users on one machine - it only stores Pype dependencies, not any personal setting or credentials.
 
 2) Then it will install all python dependencies defined in `pypeapp\requirements.txt` into this virtual environment.
+
+:::warning Linux Pype environment directory
+On linux it is necessary to adjust user permissions to `/opt/pype/pype_env2` or whatever you set in `PYPE_ENV` and for that you need to be **root**.
+:::
 
 Default installation will use your internet connection to download all necessary requirements.
 
@@ -344,7 +281,7 @@ pype deploy --force
 will deploy repositories, overwriting existing ones if they exists and setting them to state specified in *deploy.json*.
 
 :::note customizing deployment
-You can customize your deployment to some extent. Everything specified in `deploy/deploy.json` is considered as default and can be overridden by creating your own *deploy.json* in sub directory.
+You can customize your deployment to some extend. Everything specified in `deploy/deploy.json` is considered as default and can be overridden by creating your own *deploy.json* in sub directory.
 ```text
 pype
  ├─── pypeapp
